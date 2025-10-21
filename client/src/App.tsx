@@ -11,6 +11,7 @@ import Calendar from './pages/Calendar';
 import Meeting from './pages/Meeting';
 import Booking from './pages/Booking';
 import Admin from './pages/Admin';
+import Settings from './pages/Settings';
 
 // Notification Toast Component
 const NotificationToast: React.FC = () => {
@@ -71,6 +72,12 @@ const App: React.FC = () => {
                 <Route path="/admin" element={
                   <ProtectedRoute adminOnly>
                     <Admin />
+                  </ProtectedRoute>
+                } />
+                
+                <Route path="/settings" element={
+                  <ProtectedRoute>
+                    <Settings />
                   </ProtectedRoute>
                 } />
                 

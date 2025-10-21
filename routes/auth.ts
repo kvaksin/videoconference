@@ -7,7 +7,7 @@ import {
     authenticateToken 
 } from '../middleware/auth';
 import { Database } from '../database/database';
-import { User, CreateUserData, ApiResponse, LoginRequest, SignupRequest } from '../src/types';
+import { User, CreateUserData, ApiResponse, LoginRequest, SignupRequest, ChangePasswordRequest } from '../src/types';
 
 const router: Router = express.Router();
 
@@ -144,11 +144,76 @@ router.post('/signin', async (req: Request, res: Response) => {
 router.post('/signout', (req: Request, res: Response) => {
     req.session.destroy((err: any) => {
         if (err) {
-            res.status(500).json({ error: 'Could not sign out' });
+            res.status(500).json({ error: 'Logout failed' });
+        } else {
+            res.clearCookie('connect.sid');
+            res.json({ 
+                success: true,
+                message: 'Successfully signed out' 
+            });
+        }
+    });
+});
+
+// Change password route
+router.post('/change-password', authenticateToken, async (req: Request, res: Response) => {
+    try {
+        const { currentPassword, newPassword, confirmPassword }: ChangePasswordRequest = req.body;
+        const userId = (req as any).user?.id;
+
+        if (!userId) {
+            res.status(401).json({ error: 'User not authenticated' });
             return;
         }
-        res.json({ success: true, message: 'Signed out successfully' });
-    });
+
+        // Validation
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            res.status(400).json({ error: 'All password fields are required' });
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            res.status(400).json({ error: 'New password and confirmation do not match' });
+            return;
+        }
+
+        if (!isValidPassword(newPassword)) {
+            res.status(400).json({ error: 'New password must be at least 6 characters long' });
+            return;
+        }
+
+        if (currentPassword === newPassword) {
+            res.status(400).json({ error: 'New password must be different from current password' });
+            return;
+        }
+
+        // Update password
+        try {
+            await db.updateUserPassword(userId, currentPassword, newPassword);
+            
+            const response: ApiResponse = {
+                success: true,
+                message: 'Password updated successfully'
+            };
+
+            res.json(response);
+
+        } catch (updateError: any) {
+            if (updateError.message === 'Current password is incorrect') {
+                res.status(400).json({ error: 'Current password is incorrect' });
+                return;
+            }
+            if (updateError.message === 'User not found') {
+                res.status(404).json({ error: 'User not found' });
+                return;
+            }
+            throw updateError;
+        }
+
+    } catch (error) {
+        console.error('Change password error:', error);
+        res.status(500).json({ error: 'Failed to update password' });
+    }
 });
 
 // Get current user

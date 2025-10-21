@@ -315,6 +315,55 @@ export class Database {
     });
   }
 
+  async updateUserPassword(id: string, currentPassword: string, newPassword: string): Promise<boolean> {
+    return new Promise(async (resolve, reject) => {
+      try {
+        // First verify the current password
+        this.db.get(`
+          SELECT password_hash FROM users WHERE id = ?
+        `, [id], async (err, row: any) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          
+          if (!row) {
+            reject(new Error('User not found'));
+            return;
+          }
+
+          try {
+            // Verify current password
+            const isCurrentPasswordValid = await bcrypt.compare(currentPassword, row.password_hash);
+            if (!isCurrentPasswordValid) {
+              reject(new Error('Current password is incorrect'));
+              return;
+            }
+
+            // Hash new password
+            const newHashedPassword = await bcrypt.hash(newPassword, 10);
+
+            // Update password in database
+            this.db.run(`
+              UPDATE users SET password_hash = ? WHERE id = ?
+            `, [newHashedPassword, id], (updateErr) => {
+              if (updateErr) {
+                reject(updateErr);
+                return;
+              }
+              resolve(true);
+            });
+
+          } catch (hashError) {
+            reject(hashError);
+          }
+        });
+      } catch (error) {
+        reject(error);
+      }
+    });
+  }
+
   // Meeting management methods
   async createMeeting(meetingData: CreateMeetingData): Promise<Meeting> {
     return new Promise((resolve, reject) => {

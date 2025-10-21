@@ -194,4 +194,52 @@ router.post('/update-timezone', authenticateToken, async (req, res) => {
     }
 });
 
+// Change password route
+router.post('/change-password', authenticateToken, async (req, res) => {
+    try {
+        const { currentPassword, newPassword, confirmPassword } = req.body;
+        const userId = req.user.id;
+
+        // Validation
+        if (!currentPassword || !newPassword || !confirmPassword) {
+            return res.status(400).json({ error: 'All password fields are required' });
+        }
+
+        if (newPassword !== confirmPassword) {
+            return res.status(400).json({ error: 'New password and confirmation do not match' });
+        }
+
+        if (!isValidPassword(newPassword)) {
+            return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+        }
+
+        if (currentPassword === newPassword) {
+            return res.status(400).json({ error: 'New password must be different from current password' });
+        }
+
+        // Update password
+        try {
+            await db.updateUserPassword(userId, currentPassword, newPassword);
+            
+            res.json({
+                success: true,
+                message: 'Password updated successfully'
+            });
+
+        } catch (updateError) {
+            if (updateError.message === 'Current password is incorrect') {
+                return res.status(400).json({ error: 'Current password is incorrect' });
+            }
+            if (updateError.message === 'User not found') {
+                return res.status(404).json({ error: 'User not found' });
+            }
+            throw updateError;
+        }
+
+    } catch (error) {
+        console.error('Change password error:', error);
+        res.status(500).json({ error: 'Failed to update password' });
+    }
+});
+
 module.exports = { router, initializeRouter };

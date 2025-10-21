@@ -91,6 +91,12 @@ export interface LoginFormData {
   password: string;
 }
 
+export interface ChangePasswordFormData {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export interface BookingFormData {
   bookerName: string;
   bookerEmail: string;

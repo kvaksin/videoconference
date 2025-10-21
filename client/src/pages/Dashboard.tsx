@@ -103,6 +103,12 @@ const Dashboard: React.FC = () => {
             </button>
           )}
           <button 
+            className="nav-btn secondary"
+            onClick={() => navigate('/settings')}
+          >
+            🔧 Settings
+          </button>
+          <button 
             className="nav-btn danger"
             onClick={handleSignout}
           >

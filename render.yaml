@@ -5,9 +5,9 @@ services:
     region: oregon
     plan: starter
     branch: main
-    buildCommand: npm install
+    buildCommand: npm install && npm run build
     startCommand: npm start
-    healthCheckPath: /
+    healthCheckPath: /api/health
     
     # Environment variables
     envVars:
@@ -43,49 +43,83 @@ services:
 #   plan: starter
 #   maxmemoryPolicy: allkeys-lru
 
+# Alternative TypeScript deployment (advanced users):
+# Uncomment below for direct TypeScript execution in production
+# Note: Requires ts-node in production dependencies
+#
+# services:
+#   - type: web
+#     name: webrtc-videoconference-ts
+#     env: node
+#     region: oregon
+#     plan: starter
+#     branch: main
+#     buildCommand: npm install && npm run type-check:all
+#     startCommand: npm run start:ts
+#     healthCheckPath: /api/health
+#     envVars:
+#       - key: NODE_ENV
+#         value: production
+#       - key: TS_NODE_PROJECT
+#         value: ./tsconfig.json
+
 # Deployment notes and configuration:
 # 
-# 1. SECURITY SETTINGS:
+# 1. TYPESCRIPT MIGRATION:
+#    - Full TypeScript support for both frontend and backend
+#    - Build process includes TypeScript compilation and type checking
+#    - Development commands: npm run dev:full:ts (TypeScript) or npm run dev:full (JavaScript)
+#    - Type checking: npm run type-check:all
+#
+# 2. SECURITY SETTINGS:
 #    - JWT_SECRET and SESSION_SECRET are auto-generated for security
 #    - Set these manually in Render dashboard for consistent sessions across deploys
 #
-# 2. DATABASE:
+# 3. DATABASE:
 #    - SQLite database stored on persistent disk
 #    - Database file will persist across deployments
 #    - Automatic daily backups (on paid plans)
 #
-# 3. NETWORKING:
+# 4. NETWORKING:
 #    - HTTPS automatically provided by Render
 #    - WebSocket support included for Socket.IO
 #    - Custom domain can be configured in dashboard
 #
-# 4. PERFORMANCE:
+# 5. PERFORMANCE:
 #    - Starter plan: 512MB RAM, 0.1 CPU
 #    - Upgrade to Standard for better performance: 2GB RAM, 1 CPU
 #    - Auto-scaling available on higher plans
 #
-# 5. ENVIRONMENT VARIABLES TO SET MANUALLY:
+# 6. ENVIRONMENT VARIABLES TO SET MANUALLY:
 #    - Consider setting JWT_SECRET and SESSION_SECRET to fixed values
 #    - Add any custom STUN/TURN server URLs if needed
 #
-# 6. POST-DEPLOYMENT STEPS:
+# 7. POST-DEPLOYMENT STEPS:
 #    - Access the app and change default admin password
-#    - Test video calling functionality
+#    - Test video calling functionality with picture-in-picture layout
+#    - Test real-time name editing feature
 #    - Configure custom domain if needed
 #    - Set up monitoring and alerts
 #
-# 7. FEATURES SUPPORTED:
-#    - Video conferencing with WebRTC
+# 8. FEATURES SUPPORTED:
+#    - Enhanced video conferencing with picture-in-picture layout
+#    - Real-time name editing during calls
 #    - Real-time chat via Socket.IO
 #    - User authentication and sessions
 #    - Calendar integration and scheduling
 #    - Admin panel for user management
 #    - File downloads (ICS calendar files)
+#    - Full TypeScript implementation for better reliability
 #
-# 8. SCALING CONSIDERATIONS:
+# 9. SCALING CONSIDERATIONS:
 #    - Single instance suitable for small teams
 #    - For larger usage, consider:
 #      * Upgrading to Standard plan or higher
 #      * Implementing Redis for session storage
 #      * Adding TURN servers for better connectivity
 #      * Database optimization or migration to PostgreSQL
+#
+# 10. DEVELOPMENT VS PRODUCTION:
+#     - Production uses compiled JavaScript (npm start)
+#     - Development can use TypeScript directly (npm run dev:ts)
+#     - Build process includes type checking for safety

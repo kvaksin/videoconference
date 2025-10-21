@@ -28,6 +28,14 @@ export const authService = {
 
   async updateTimezone(timezone: string): Promise<void> {
     await api.post('/api/auth/update-timezone', { timezone });
+  },
+
+  async changePassword(currentPassword: string, newPassword: string, confirmPassword: string): Promise<void> {
+    await api.post('/api/auth/change-password', { 
+      currentPassword, 
+      newPassword, 
+      confirmPassword 
+    });
   }
 };
 

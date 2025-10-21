@@ -124,6 +124,12 @@ export interface SignupRequest {
   fullName?: string;
 }
 
+export interface ChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
 export interface UpdateUserLicenseRequest {
   hasFullLicense: boolean;
 }
