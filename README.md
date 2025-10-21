@@ -1,25 +1,35 @@
 # 🎥 Advanced WebRTC Video Conference Platform
 
-A comprehensive video conferencing platform with authentication, calendar integration, scheduling, and admin management. Built with TypeScript, React, WebRTC, Node.js, Socket.IO, and SQLite.
+A comprehensive video conferencing platform with authentication, calendar integration, scheduling, admin management, and advanced security features. Built with TypeScript, React, WebRTC, Node.js, Socket.IO, and SQLite.
 
 ## ✨ Features
 
 ### 🎥 Video Conferencing
-- **HD Video & Audio**: High-quality peer-to-peer video calls
+- **HD Video & Audio**: High-quality peer-to-peer video calls with adaptive quality
 - **Picture-in-Picture Layout**: Professional layout with large remote video and small self-view overlay
-- **Real-time Name Editing**: Change your display name during calls, visible to all participants
+- **Real-time Name Editing**: Change your display name during calls, visible to all participants instantly
 - **Real-time Chat**: Messaging during video calls using WebRTC data channels
 - **Screen Sharing**: Share your screen with other participants
-- **Media Controls**: Toggle video/audio, mute/unmute functionality
-- **Room-based Meetings**: Create and join private meeting rooms
+- **Media Controls**: Toggle video/audio, mute/unmute functionality with visual feedback
+- **Room-based Meetings**: Create and join private meeting rooms with unique IDs
 - **Meeting Links**: Copy shareable meeting links for easy access
-- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
+- **Responsive Video Layout**: Optimized for desktop, tablet, and mobile devices
+- **Connection Status**: Real-time connection quality indicators
 
 ### 👤 User Management & Authentication
-- **User Registration**: Sign up with full name and email
-- **Secure Authentication**: JWT-based authentication with sessions
-- **User Profiles**: Personal dashboards and settings
-- **License Management**: Basic and Full license tiers
+- **User Registration**: Sign up with full name and email validation
+- **Secure Authentication**: JWT-based authentication with encrypted sessions
+- **Password Security**: Secure password change functionality with validation
+- **User Profiles**: Personal dashboards with comprehensive account settings
+- **License Management**: Basic and Full license tiers with feature restrictions
+- **Session Management**: Secure session handling with automatic cleanup
+
+### 🔒 Security & Account Management
+- **Password Change**: Secure password update with current password verification
+- **Password Validation**: Minimum length requirements and strength indicators
+- **Account Security**: Built-in security tips and best practices guidance
+- **Session Security**: Automatic session invalidation and secure token handling
+- **Data Protection**: Encrypted password storage using bcrypt hashing
 
 ### 🛠️ Admin Panel
 - **User Management**: View and manage all users
