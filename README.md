@@ -1,16 +1,19 @@
 # 🎥 Advanced WebRTC Video Conference Platform
 
-A comprehensive video conferencing platform with authentication, calendar integration, scheduling, and admin management. Built with WebRTC, Node.js, Socket.IO, and SQLite.
+A comprehensive video conferencing platform with authentication, calendar integration, scheduling, and admin management. Built with TypeScript, React, WebRTC, Node.js, Socket.IO, and SQLite.
 
 ## ✨ Features
 
 ### 🎥 Video Conferencing
 - **HD Video & Audio**: High-quality peer-to-peer video calls
+- **Picture-in-Picture Layout**: Professional layout with large remote video and small self-view overlay
+- **Real-time Name Editing**: Change your display name during calls, visible to all participants
 - **Real-time Chat**: Messaging during video calls using WebRTC data channels
 - **Screen Sharing**: Share your screen with other participants
 - **Media Controls**: Toggle video/audio, mute/unmute functionality
 - **Room-based Meetings**: Create and join private meeting rooms
 - **Meeting Links**: Copy shareable meeting links for easy access
+- **Responsive Design**: Optimized for desktop, tablet, and mobile devices
 
 ### 👤 User Management & Authentication
 - **User Registration**: Sign up with full name and email
@@ -38,6 +41,7 @@ A comprehensive video conferencing platform with authentication, calendar integr
 - **CORS Configuration**: Secure cross-origin requests
 - **Helmet Security**: Advanced security headers
 - **Input Validation**: Comprehensive data validation
+- **Type Safety**: Full TypeScript implementation for better code quality
 
 ### 📱 Responsive Design
 - **Mobile-friendly**: Works on desktop and mobile devices
@@ -47,8 +51,9 @@ A comprehensive video conferencing platform with authentication, calendar integr
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Node.js (v14 or higher)
+- Node.js (v16 or higher)
 - npm or yarn
+- TypeScript (installed globally or via npx)
 - OpenSSL (for TLS certificates)
 
 ### Installation
@@ -61,23 +66,47 @@ cd videoconference
 
 2. **Install dependencies**:
 ```bash
+# Install server dependencies
 npm install
+
+# Install client dependencies
+cd client
+npm install
+cd ..
 ```
 
-3. **Generate TLS certificates** (optional for HTTPS):
+3. **TypeScript Build** (Client):
+```bash
+cd client
+npm run build
+cd ..
+```
+
+4. **Generate TLS certificates** (optional for HTTPS):
 ```bash
 chmod +x scripts/generate-certs.sh
 ./scripts/generate-certs.sh
 ```
 
-4. **Start the server**:
+5. **Start the server**:
 ```bash
 npm start
 ```
 
-5. **Access the application**:
-- HTTP: `http://localhost:3000`
-- HTTPS: `https://localhost:3443` (if certificates are generated)
+6. **Development mode** (with TypeScript compilation):
+```bash
+# Start server in development mode
+npm run dev
+
+# In another terminal, start React development server
+cd client
+npm start
+```
+
+7. **Access the application**:
+- Development: `http://localhost:3000` (React dev server)
+- Production HTTP: `http://localhost:3000`
+- Production HTTPS: `https://localhost:3443` (if certificates are generated)
 
 ## 🔐 Default Admin Account
 
@@ -208,6 +237,18 @@ The platform is fully responsive and works on mobile devices:
 videoconference/
 ├── server.js              # Main server file
 ├── package.json           # Dependencies and scripts
+├── client/                # React TypeScript frontend
+│   ├── src/
+│   │   ├── components/    # Reusable React components
+│   │   ├── context/       # React context providers
+│   │   ├── pages/         # Page components
+│   │   ├── services/      # API and authentication services
+│   │   ├── types/         # TypeScript type definitions
+│   │   ├── App.tsx        # Main React application
+│   │   └── index.tsx      # React entry point
+│   ├── public/            # Static assets
+│   ├── package.json       # Client dependencies
+│   └── tsconfig.json      # TypeScript configuration
 ├── database/
 │   ├── database.js        # Database management
 │   └── videoconference.db # SQLite database
@@ -217,11 +258,6 @@ videoconference/
 │   ├── auth.js           # Authentication routes
 │   ├── admin.js          # Admin routes
 │   └── calendar.js       # Calendar routes
-├── public/               # Frontend files
-│   ├── *.html           # HTML pages
-│   ├── *.css            # Stylesheets
-│   ├── *.js             # JavaScript files
-│   └── ics/             # Generated ICS files
 ├── certificates/         # TLS certificates
 └── scripts/
     └── generate-certs.sh # Certificate generation
@@ -229,17 +265,55 @@ videoconference/
 
 ### Development Commands
 ```bash
+# Server commands
 npm start              # Start production server
 npm run dev           # Start development server with nodemon
-npm install           # Install dependencies
-npm audit             # Check for vulnerabilities
+
+# Client commands (in /client directory)
+npm start             # Start React development server
+npm run build         # Build production React app
+npm run type-check    # TypeScript type checking
+npm test              # Run React tests
+
+# Full stack development
+npm install           # Install server dependencies
+cd client && npm install  # Install client dependencies
 ```
+
+### TypeScript Development
+
+#### Type Definitions
+The application includes comprehensive TypeScript definitions in `client/src/types/index.ts`:
+
+- **User Types**: User authentication and profile data
+- **Meeting Types**: Video conference meeting data
+- **API Types**: Request/response interfaces
+- **Component Props**: React component prop types
+- **Context Types**: React context interfaces
+- **WebRTC Types**: Video conferencing data types
+
+#### TypeScript Configuration
+- **Strict Mode**: Enabled for maximum type safety
+- **ES2020 Target**: Modern JavaScript features
+- **JSX Support**: React component support
+- **Path Mapping**: Clean import paths
+- **Type Checking**: Full compile-time validation
+
+#### Development Workflow
+1. **Type-First Development**: Define interfaces before implementation
+2. **Strict Typing**: All functions and components are typed
+3. **Error Prevention**: Compile-time error catching
+4. **IntelliSense**: Enhanced IDE support
+5. **Refactoring Safety**: Type-safe code changes
 
 ### Adding Features
 1. **Database**: Update `database/database.js` for new tables
-2. **Routes**: Add new API routes in `routes/`
-3. **Frontend**: Create new pages in `public/`
-4. **Middleware**: Add security/validation in `middleware/`
+2. **Backend Routes**: Add new API routes in `routes/`
+3. **Frontend Components**: Create new React components in `client/src/components/`
+4. **Type Definitions**: Add new interfaces in `client/src/types/index.ts`
+5. **Pages**: Create new page components in `client/src/pages/`
+6. **Services**: Add API services in `client/src/services/`
+7. **Middleware**: Add security/validation in `middleware/`
 
 ## 🚀 Deployment
 
@@ -361,6 +435,16 @@ MIT License - see LICENSE file for details.
 
 ## 🆕 Recent Updates
 
+- ✅ **TypeScript Migration**: Full conversion from JavaScript to TypeScript
+  - Complete type safety for all React components
+  - Comprehensive type definitions for APIs and data structures
+  - Enhanced developer experience with IntelliSense
+  - Compile-time error prevention
+- ✅ **React Architecture**: Modern React with hooks and context
+  - Functional components with TypeScript
+  - Context-based state management
+  - Protected routes with role-based access
+  - Responsive component design
 - ✅ User authentication and authorization
 - ✅ Admin panel for user management
 - ✅ Calendar integration with ICS export

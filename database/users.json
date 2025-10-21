@@ -1,0 +1,13 @@
+[
+  {
+    "id": "dab50ae4-f781-4be2-a544-14cd05ce7557",
+    "email": "admin@videoconference.com",
+    "full_name": "System Administrator",
+    "password_hash": "$2a$10$WNZlj8D1S2yHW2Kbw3bftezC6x.kiVW/WVZTuMB76Ws.JLxwwxYmO",
+    "is_admin": true,
+    "has_full_license": true,
+    "created_at": "2025-10-21T22:45:43.183Z",
+    "last_login": null,
+    "timezone": "UTC"
+  }
+]
