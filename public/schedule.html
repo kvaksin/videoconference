@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schedule Meeting - WebRTC Video Conference</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="schedule.css">
+</head>
+<body>
+    <div class="schedule-container">
+        <header class="schedule-header">
+            <div class="host-info">
+                <div class="host-avatar" id="hostAvatar">?</div>
+                <div class="host-details">
+                    <h1 id="hostName">Loading...</h1>
+                    <p>Select a time for your meeting</p>
+                </div>
+            </div>
+        </header>
+
+        <main class="schedule-main">
+            <div class="calendar-section">
+                <h3>📅 Select Date</h3>
+                <div class="date-picker">
+                    <div class="month-nav">
+                        <button class="nav-btn secondary" id="prevMonth">←</button>
+                        <h4 id="currentMonth">Loading...</h4>
+                        <button class="nav-btn secondary" id="nextMonth">→</button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- Calendar will be populated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <div class="time-section">
+                <h3>⏰ Available Times</h3>
+                <div class="selected-date" id="selectedDateDisplay">
+                    Select a date to see available times
+                </div>
+                <div class="time-slots" id="timeSlots">
+                    <!-- Time slots will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="booking-section" id="bookingSection" style="display: none;">
+                <h3>📝 Meeting Details</h3>
+                <form id="bookingForm" class="booking-form">
+                    <div class="selected-time-display" id="selectedTimeDisplay"></div>
+                    
+                    <div class="form-group">
+                        <label for="meetingTitle">Meeting Title *</label>
+                        <input type="text" id="meetingTitle" name="title" required placeholder="What's this meeting about?">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="participantName">Your Name *</label>
+                        <input type="text" id="participantName" name="name" required placeholder="Enter your full name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="participantEmail">Your Email *</label>
+                        <input type="email" id="participantEmail" name="email" required placeholder="Enter your email address">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="meetingDescription">Additional Notes (Optional)</label>
+                        <textarea id="meetingDescription" name="description" placeholder="Anything else you'd like to share?"></textarea>
+                    </div>
+                    
+                    <div class="booking-actions">
+                        <button type="button" class="nav-btn secondary" id="cancelBooking">Cancel</button>
+                        <button type="submit" class="nav-btn primary">
+                            <span class="btn-text">Book Meeting</span>
+                            <span class="btn-loader" style="display: none;">Booking...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <div class="notifications" id="notifications"></div>
+
+    <script src="schedule.js"></script>
+</body>
+</html>

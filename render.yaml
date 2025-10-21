@@ -1,0 +1,91 @@
+services:
+  - type: web
+    name: webrtc-videoconference
+    env: node
+    region: oregon
+    plan: starter
+    branch: main
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /
+    
+    # Environment variables
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 10000
+      - key: JWT_SECRET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: DB_PATH
+        value: /opt/render/project/src/database/videoconference.db
+    
+    # Persistent disk for SQLite database
+    disk:
+      name: videoconference-database
+      mountPath: /opt/render/project/src/database
+      sizeGB: 1
+    
+    # Auto-deploy on git push
+    autoDeploy: true
+    
+    # Health check settings
+    healthCheckGracePeriodSeconds: 30
+    
+    # Scaling settings
+    numInstances: 1
+
+# Optional: Redis for session storage in production (upgrade plan required)
+# - type: redis
+#   name: videoconference-redis
+#   plan: starter
+#   maxmemoryPolicy: allkeys-lru
+
+# Deployment notes and configuration:
+# 
+# 1. SECURITY SETTINGS:
+#    - JWT_SECRET and SESSION_SECRET are auto-generated for security
+#    - Set these manually in Render dashboard for consistent sessions across deploys
+#
+# 2. DATABASE:
+#    - SQLite database stored on persistent disk
+#    - Database file will persist across deployments
+#    - Automatic daily backups (on paid plans)
+#
+# 3. NETWORKING:
+#    - HTTPS automatically provided by Render
+#    - WebSocket support included for Socket.IO
+#    - Custom domain can be configured in dashboard
+#
+# 4. PERFORMANCE:
+#    - Starter plan: 512MB RAM, 0.1 CPU
+#    - Upgrade to Standard for better performance: 2GB RAM, 1 CPU
+#    - Auto-scaling available on higher plans
+#
+# 5. ENVIRONMENT VARIABLES TO SET MANUALLY:
+#    - Consider setting JWT_SECRET and SESSION_SECRET to fixed values
+#    - Add any custom STUN/TURN server URLs if needed
+#
+# 6. POST-DEPLOYMENT STEPS:
+#    - Access the app and change default admin password
+#    - Test video calling functionality
+#    - Configure custom domain if needed
+#    - Set up monitoring and alerts
+#
+# 7. FEATURES SUPPORTED:
+#    - Video conferencing with WebRTC
+#    - Real-time chat via Socket.IO
+#    - User authentication and sessions
+#    - Calendar integration and scheduling
+#    - Admin panel for user management
+#    - File downloads (ICS calendar files)
+#
+# 8. SCALING CONSIDERATIONS:
+#    - Single instance suitable for small teams
+#    - For larger usage, consider:
+#      * Upgrading to Standard plan or higher
+#      * Implementing Redis for session storage
+#      * Adding TURN servers for better connectivity
+#      * Database optimization or migration to PostgreSQL

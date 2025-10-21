@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - WebRTC Video Conference</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="user-info">
+                <h2>🛠️ Admin Panel</h2>
+                <p>Manage users and system settings</p>
+            </div>
+            <div class="nav-actions">
+                <a href="/dashboard" class="nav-btn secondary">← Back to Dashboard</a>
+                <button class="nav-btn danger" id="signoutBtn">Sign Out</button>
+            </div>
+        </header>
+
+        <!-- System Statistics -->
+        <div class="admin-section">
+            <h3>📊 System Statistics</h3>
+            <div class="stats-grid" id="systemStats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalUsers">-</div>
+                    <div class="stat-label">Total Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="fullLicenseUsers">-</div>
+                    <div class="stat-label">Full License Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="basicUsers">-</div>
+                    <div class="stat-label">Basic Users</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="recentSignups">-</div>
+                    <div class="stat-label">Recent Signups (30 days)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- User Management -->
+        <div class="admin-section">
+            <div class="section-header">
+                <h3>👥 User Management</h3>
+                <button class="nav-btn primary" id="createUserBtn">+ Create User</button>
+            </div>
+            
+            <div class="table-container">
+                <table class="admin-table" id="usersTable">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Email</th>
+                            <th>License</th>
+                            <th>Role</th>
+                            <th>Created</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTableBody">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 40px; color: #666;">
+                                Loading users...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create User Modal -->
+    <div class="modal" id="createUserModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Create New User</h3>
+                <button class="modal-close" id="closeCreateModal">&times;</button>
+            </div>
+            
+            <form id="createUserForm" class="modal-form">
+                <div class="form-group">
+                    <label for="newUserFullName">Full Name</label>
+                    <input type="text" id="newUserFullName" name="fullName" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newUserEmail">Email</label>
+                    <input type="email" id="newUserEmail" name="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="newUserPassword">Password</label>
+                    <input type="password" id="newUserPassword" name="password" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="newUserAdmin" name="isAdmin">
+                        <span class="checkmark"></span>
+                        Admin User
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="newUserFullLicense" name="hasFullLicense">
+                        <span class="checkmark"></span>
+                        Full License
+                    </label>
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="nav-btn secondary" id="cancelCreateUser">Cancel</button>
+                    <button type="submit" class="nav-btn primary">Create User</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="notifications" id="notifications"></div>
+
+    <script src="auth.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - WebRTC Video Conference</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="user-info">
+                <h2 id="userName">Loading...</h2>
+                <p id="userEmail">Loading...</p>
+                <div id="licenseBadge" class="license-badge basic">Basic License</div>
+            </div>
+            <div class="nav-actions">
+                <a href="/calendar" class="nav-btn primary" id="calendarBtn" style="display: none;">📅 Calendar</a>
+                <a href="/admin" class="nav-btn secondary" id="adminBtn" style="display: none;">⚙️ Admin</a>
+                <a href="/" class="nav-btn primary">🎥 Video Conference</a>
+                <button class="nav-btn danger" id="signoutBtn">Sign Out</button>
+            </div>
+        </header>
+
+        <main class="dashboard-content">
+            <div class="dashboard-card">
+                <h3>🎥 Video Conferencing</h3>
+                <p>Start or join video conferences with high-quality audio and video.</p>
+                
+                <div class="feature-list">
+                    <li class="feature-enabled">
+                        <span class="feature-icon">✅</span>
+                        HD Video & Audio Calls
+                    </li>
+                    <li class="feature-enabled">
+                        <span class="feature-icon">✅</span>
+                        Real-time Chat Messaging
+                    </li>
+                    <li class="feature-enabled">
+                        <span class="feature-icon">✅</span>
+                        Screen Sharing
+                    </li>
+                    <li class="feature-enabled">
+                        <span class="feature-icon">✅</span>
+                        Room-based Meetings
+                    </li>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <a href="/" class="nav-btn primary" style="width: 100%; text-align: center;">Start Video Conference</a>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>📅 Calendar & Scheduling</h3>
+                <div id="calendarFeatures">
+                    <p id="calendarDescription">Advanced calendar features for managing meetings and schedules.</p>
+                    
+                    <div class="feature-list" id="calendarFeatureList">
+                        <li class="feature-disabled" id="icsCalendar">
+                            <span class="feature-icon">❌</span>
+                            ICS Calendar Integration
+                        </li>
+                        <li class="feature-disabled" id="outlookSync">
+                            <span class="feature-icon">❌</span>
+                            Outlook Synchronization
+                        </li>
+                        <li class="feature-disabled" id="schedulingTool">
+                            <span class="feature-icon">❌</span>
+                            Calendly-style Scheduling
+                        </li>
+                        <li class="feature-disabled" id="automaticMeetings">
+                            <span class="feature-icon">❌</span>
+                            Automatic Meeting Generation
+                        </li>
+                        <li class="feature-disabled" id="availabilityManagement">
+                            <span class="feature-icon">❌</span>
+                            Availability Management
+                        </li>
+                    </div>
+                    
+                    <div class="upgrade-notice" id="upgradeNotice">
+                        <h4>🚀 Upgrade to Full License</h4>
+                        <p>Contact your administrator to unlock calendar and scheduling features.</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 20px;">
+                    <a href="/calendar" class="nav-btn primary" id="calendarAccessBtn" style="width: 100%; text-align: center; display: none;">Access Calendar</a>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>🔗 Sharing & Links</h3>
+                <p>Share your scheduling link with others to book meetings with you.</p>
+                
+                <div id="schedulingLinkSection" style="display: none;">
+                    <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin: 15px 0;">
+                        <label style="display: block; margin-bottom: 8px; font-weight: 600;">Your Scheduling Link:</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="text" id="schedulingLink" readonly style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 4px; background: white;">
+                            <button class="nav-btn primary" id="copyLinkBtn">Copy</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="shareUnavailable">
+                    <p style="color: #666; font-style: italic;">Scheduling link available with full license.</p>
+                </div>
+            </div>
+
+            <div class="dashboard-card">
+                <h3>📊 Statistics</h3>
+                <div id="userStats">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #667eea;" id="totalMeetings">0</div>
+                            <div style="font-size: 0.9rem; color: #666;">Total Meetings</div>
+                        </div>
+                        <div style="text-align: center; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="font-size: 2rem; font-weight: bold; color: #28a745;" id="upcomingMeetings">0</div>
+                            <div style="font-size: 0.9rem; color: #666;">Upcoming</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="notifications" id="notifications"></div>
+
+    <script src="auth.js"></script>
+    <script src="dashboard.js"></script>
+</body>
+</html>

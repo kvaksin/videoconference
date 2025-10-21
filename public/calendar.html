@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar - WebRTC Video Conference</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="calendar.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="dashboard-header">
+            <div class="user-info">
+                <h2>📅 Calendar & Scheduling</h2>
+                <p>Manage your availability and meetings</p>
+            </div>
+            <div class="nav-actions">
+                <a href="/dashboard" class="nav-btn secondary">← Back to Dashboard</a>
+                <button class="nav-btn primary" id="downloadIcsBtn">📥 Download ICS</button>
+                <button class="nav-btn danger" id="signoutBtn">Sign Out</button>
+            </div>
+        </header>
+
+        <div class="calendar-layout">
+            <!-- Left Sidebar -->
+            <aside class="calendar-sidebar">
+                <!-- Availability Settings -->
+                <div class="sidebar-section">
+                    <h3>⏰ Set Availability</h3>
+                    <p>Configure when you're available for meetings</p>
+                    
+                    <form id="availabilityForm" class="availability-form">
+                        <div class="day-settings" id="daySettings">
+                            <!-- Days will be populated by JavaScript -->
+                        </div>
+                        
+                        <div class="timezone-setting">
+                            <label for="timezone">Timezone:</label>
+                            <select id="timezone" name="timezone">
+                                <option value="UTC">UTC</option>
+                                <option value="America/New_York">Eastern Time</option>
+                                <option value="America/Chicago">Central Time</option>
+                                <option value="America/Denver">Mountain Time</option>
+                                <option value="America/Los_Angeles">Pacific Time</option>
+                                <option value="Europe/London">London</option>
+                                <option value="Europe/Paris">Paris</option>
+                                <option value="Asia/Tokyo">Tokyo</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="nav-btn primary">Save Availability</button>
+                    </form>
+                </div>
+
+                <!-- Scheduling Link -->
+                <div class="sidebar-section">
+                    <h3>🔗 Scheduling Link</h3>
+                    <p>Share this link for others to book meetings with you</p>
+                    
+                    <div class="link-container">
+                        <input type="text" id="schedulingLink" readonly>
+                        <button class="nav-btn secondary" id="copyLinkBtn">Copy</button>
+                    </div>
+                    
+                    <div class="link-actions">
+                        <button class="nav-btn primary" id="openSchedulingPageBtn">View Booking Page</button>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="sidebar-section">
+                    <h3>⚡ Quick Actions</h3>
+                    <div class="quick-actions">
+                        <button class="nav-btn primary" id="createMeetingBtn">+ Create Meeting</button>
+                        <button class="nav-btn secondary" id="syncOutlookBtn">🔄 Sync with Outlook</button>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Calendar Area -->
+            <main class="calendar-main">
+                <div class="calendar-header">
+                    <div class="calendar-nav">
+                        <button class="nav-btn secondary" id="prevMonth">←</button>
+                        <h3 id="currentMonth">Loading...</h3>
+                        <button class="nav-btn secondary" id="nextMonth">→</button>
+                    </div>
+                    <div class="view-toggle">
+                        <button class="view-btn active" data-view="month">Month</button>
+                        <button class="view-btn" data-view="week">Week</button>
+                        <button class="view-btn" data-view="day">Day</button>
+                    </div>
+                </div>
+
+                <div class="calendar-grid" id="calendarGrid">
+                    <!-- Calendar will be populated by JavaScript -->
+                </div>
+
+                <!-- Meetings List -->
+                <div class="meetings-section">
+                    <h3>📅 Upcoming Meetings</h3>
+                    <div class="meetings-list" id="meetingsList">
+                        <div class="loading-state">Loading meetings...</div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Create Meeting Modal -->
+    <div class="modal" id="createMeetingModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📅 Create New Meeting</h3>
+                <button class="modal-close" id="closeMeetingModal">&times;</button>
+            </div>
+            
+            <form id="createMeetingForm" class="modal-form">
+                <div class="form-group">
+                    <label for="meetingTitle">Meeting Title</label>
+                    <input type="text" id="meetingTitle" name="title" required placeholder="Enter meeting title">
+                </div>
+                
+                <div class="form-group">
+                    <label for="meetingDescription">Description (Optional)</label>
+                    <textarea id="meetingDescription" name="description" placeholder="Meeting description"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="meetingDate">Date</label>
+                        <input type="date" id="meetingDate" name="date" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="meetingStartTime">Start Time</label>
+                        <input type="time" id="meetingStartTime" name="startTime" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="meetingEndTime">End Time</label>
+                        <input type="time" id="meetingEndTime" name="endTime" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="participantEmail">Participant Email (Optional)</label>
+                    <input type="email" id="participantEmail" name="participantEmail" placeholder="participant@example.com">
+                </div>
+                
+                <div class="form-group">
+                    <label for="participantName">Participant Name (Optional)</label>
+                    <input type="text" id="participantName" name="participantName" placeholder="Participant Name">
+                </div>
+                
+                <div class="modal-actions">
+                    <button type="button" class="nav-btn secondary" id="cancelCreateMeeting">Cancel</button>
+                    <button type="submit" class="nav-btn primary">Create Meeting</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="notifications" id="notifications"></div>
+
+    <script src="auth.js"></script>
+    <script src="calendar.js"></script>
+</body>
+</html>

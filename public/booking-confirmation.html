@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Confirmed - WebRTC Video Conference</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="confirmation-card">
+            <div class="confirmation-icon">✅</div>
+            <h1>Meeting Confirmed!</h1>
+            <p>Your meeting has been successfully booked.</p>
+            
+            <div class="meeting-details" id="meetingDetails">
+                <!-- Details will be populated by JavaScript -->
+            </div>
+            
+            <div class="confirmation-actions">
+                <button class="nav-btn primary" id="downloadIcsBtn">
+                    📥 Add to Calendar (ICS)
+                </button>
+                <button class="nav-btn primary" id="joinMeetingBtn">
+                    🎥 Join Meeting
+                </button>
+                <button class="nav-btn secondary" id="copyMeetingLinkBtn">
+                    🔗 Copy Meeting Link
+                </button>
+            </div>
+            
+            <div class="important-note">
+                <h4>📧 Important:</h4>
+                <p>You will receive a confirmation email with the meeting details and calendar invite. Please save this page or bookmark the meeting link.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="notifications" id="notifications"></div>
+
+    <script src="booking-confirmation.js"></script>
+</body>
+</html>

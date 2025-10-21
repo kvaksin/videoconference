@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Room - WebRTC Video Conference</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="meeting-info" id="meetingInfo">
+                <h1 id="meetingTitle">Loading Meeting...</h1>
+                <p id="meetingDescription"></p>
+                <div class="meeting-meta">
+                    <span id="meetingTime"></span> • 
+                    <span id="meetingHost"></span>
+                </div>
+            </div>
+            <div class="meeting-actions">
+                <button class="nav-btn secondary" id="downloadIcsBtn">📥 Add to Calendar</button>
+                <button class="nav-btn primary" id="joinVideoCallBtn">🎥 Join Video Call</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="video-container" id="videoContainer" style="display: none;">
+                <div class="video-wrapper">
+                    <video id="localVideo" autoplay muted></video>
+                    <div class="video-label">You</div>
+                    <div class="video-controls">
+                        <button id="toggleVideo" class="control-btn">
+                            <span class="icon">📹</span>
+                        </button>
+                        <button id="toggleAudio" class="control-btn">
+                            <span class="icon">🎤</span>
+                        </button>
+                        <button id="shareScreen" class="control-btn">
+                            <span class="icon">💻</span>
+                        </button>
+                        <button id="endCall" class="control-btn end-call">
+                            <span class="icon">📞</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="video-wrapper" id="remoteVideoWrapper" style="display: none;">
+                    <video id="remoteVideo" autoplay></video>
+                    <div class="video-label">Remote User</div>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>Chat</h3>
+                    <span id="connectionStatus">Disconnected</span>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Type a message...">
+                    <button id="sendMessage">Send</button>
+                </div>
+            </div>
+
+            <div class="meeting-waiting" id="meetingWaiting">
+                <div class="waiting-content">
+                    <h2>📅 Meeting Room</h2>
+                    <p>This meeting is scheduled for a specific time. You can join when it's time or wait for the host.</p>
+                    <div class="waiting-actions">
+                        <button class="nav-btn primary" id="earlyJoinBtn">Join Early</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="notifications" id="notifications"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="meeting.js"></script>
+</body>
+</html>

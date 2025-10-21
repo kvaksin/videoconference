@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC Video Conference</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>WebRTC Video Conference</h1>
+            <div class="user-header" id="userHeader" style="display: none;">
+                <div class="user-info">
+                    <span id="currentUserName">User</span>
+                    <a href="/dashboard" class="nav-link">Dashboard</a>
+                    <button id="headerSignoutBtn" class="nav-btn secondary">Sign Out</button>
+                </div>
+            </div>
+            <div class="controls">
+                <input type="text" id="roomId" placeholder="Enter Room ID">
+                <button id="joinRoom">Join Room</button>
+                <button id="createRoom">Create Room</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="video-container">
+                <div class="video-wrapper">
+                    <video id="localVideo" autoplay muted></video>
+                    <div class="video-label">You</div>
+                    <div class="video-controls">
+                        <button id="toggleVideo" class="control-btn">
+                            <span class="icon">📹</span>
+                        </button>
+                        <button id="toggleAudio" class="control-btn">
+                            <span class="icon">🎤</span>
+                        </button>
+                        <button id="shareScreen" class="control-btn">
+                            <span class="icon">💻</span>
+                        </button>
+                        <button id="endCall" class="control-btn end-call">
+                            <span class="icon">📞</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="video-wrapper" id="remoteVideoWrapper" style="display: none;">
+                    <video id="remoteVideo" autoplay></video>
+                    <div class="video-label">Remote User</div>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-header">
+                    <h3>Chat</h3>
+                    <span id="connectionStatus">Disconnected</span>
+                </div>
+                <div class="chat-messages" id="chatMessages"></div>
+                <div class="chat-input">
+                    <input type="text" id="messageInput" placeholder="Type a message...">
+                    <button id="sendMessage">Send</button>
+                </div>
+            </div>
+        </main>
+
+        <div class="room-info" id="roomInfo" style="display: none;">
+            <p>Room ID: <span id="currentRoomId"></span></p>
+            <button id="copyRoomId">Copy Meeting Link</button>
+        </div>
+
+        <div class="notifications" id="notifications"></div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="auth.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

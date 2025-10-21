@@ -1,0 +1,50 @@
+# Render deployment ignore file
+# Similar to .gitignore but for Render deployments
+
+# Development files
+.env.local
+.env.development
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Runtime files
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+
+# Development certificates (production will use Render's SSL)
+certificates/*.pem
+certificates/*.key
+certificates/*.crt
+
+# Local database files (production uses persistent disk)
+# database/*.db-*
+# database/*.sqlite-*
+
+# Optional: exclude large files if not needed
+# node_modules/ (this is rebuilt on deploy)
