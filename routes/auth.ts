@@ -64,6 +64,7 @@ router.post('/signup', async (req: Request, res: Response) => {
             // Store token in session
             (req.session as any).token = token;
             (req.session as any).userId = newUser.id;
+            (req.session as any).isAuthenticated = true;
 
             const response: ApiResponse<User> = {
                 success: true,
@@ -118,6 +119,7 @@ router.post('/signin', async (req: Request, res: Response) => {
         // Store token in session
         (req.session as any).token = token;
         (req.session as any).userId = user.id;
+        (req.session as any).isAuthenticated = true;
 
         const response: ApiResponse<User> = {
             success: true,
@@ -142,6 +144,11 @@ router.post('/signin', async (req: Request, res: Response) => {
 
 // Sign out route
 router.post('/signout', (req: Request, res: Response) => {
+    // Clear session data
+    (req.session as any).token = null;
+    (req.session as any).userId = null;
+    (req.session as any).isAuthenticated = false;
+    
     req.session.destroy((err: any) => {
         if (err) {
             res.status(500).json({ error: 'Logout failed' });

@@ -72,6 +72,7 @@ export interface AuthContextType {
   currentUser: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
+  signup: (fullName: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   updateUser: (user: User) => void;
 }
@@ -87,6 +88,12 @@ export interface NotificationContextType {
 
 // Form types
 export interface LoginFormData {
+  email: string;
+  password: string;
+}
+
+export interface SignupFormData {
+  fullName: string;
   email: string;
   password: string;
 }

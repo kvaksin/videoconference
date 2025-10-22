@@ -494,6 +494,10 @@ Open browser developer tools to see:
 - API request/response details
 - Socket.IO connection events
 
+**Console Issues?** See these guides:
+- 📋 [Browser Console Troubleshooting](BROWSER_CONSOLE_TROUBLESHOOTING.md) - Fix common warnings and errors
+- 🔍 [Console Filtering Guide](CONSOLE_FILTERING_GUIDE.md) - Focus on real issues vs extension noise
+
 ## 📞 Support
 
 For issues and questions:

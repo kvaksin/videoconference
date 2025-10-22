@@ -7,7 +7,18 @@
     "is_admin": true,
     "has_full_license": true,
     "created_at": "2025-10-21T22:45:43.183Z",
-    "last_login": null,
+    "last_login": "2025-10-22T00:21:37.319Z",
     "timezone": "UTC"
+  },
+  {
+    "id": "5eec35de-12b4-4a80-8e25-1aaf2edc3193",
+    "email": "kv@ex.com",
+    "full_name": "Konstantin Vaksin",
+    "password_hash": "$2a$10$07TDSoezgHtfmA7N0PJIsOmTtoHMeCkR1vRLDS90ojS1jVj7HLnQ6",
+    "has_full_license": false,
+    "is_admin": false,
+    "timezone": "UTC",
+    "created_at": "2025-10-22T00:10:26.170Z",
+    "last_login": null
   }
 ]

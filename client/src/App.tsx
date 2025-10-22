@@ -32,7 +32,10 @@ const App: React.FC = () => {
     <div className="App">
       <AuthProvider>
         <NotificationProvider>
-          <Router>
+          <Router future={{ 
+            v7_startTransition: true,
+            v7_relativeSplatPath: true 
+          }}>
             <div style={{ minHeight: '100vh' }}>
               <Routes>
                 {/* Public Routes */}

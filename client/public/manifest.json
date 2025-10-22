@@ -1,0 +1,44 @@
+{
+  "short_name": "VideoConference",
+  "name": "Advanced WebRTC Video Conference Platform",
+  "description": "Professional video conferencing with HD video calls, chat, screen sharing, and calendar integration",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ],
+  "start_url": "./",
+  "display": "standalone",
+  "theme_color": "#667eea",
+  "background_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "scope": "/",
+  "categories": ["productivity", "business", "communication"],
+
+  "features": [
+    "HD Video Calls",
+    "Real-time Chat", 
+    "Screen Sharing",
+    "Calendar Integration",
+    "Meeting Scheduling",
+    "Admin Dashboard"
+  ],
+  "shortcuts": [
+    {
+      "name": "Join Meeting",
+      "short_name": "Join",
+      "description": "Quickly join a video meeting",
+      "url": "/dashboard",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    },
+    {
+      "name": "Schedule Meeting",
+      "short_name": "Schedule",
+      "description": "Schedule a new meeting", 
+      "url": "/calendar",
+      "icons": [{ "src": "/favicon.svg", "sizes": "any" }]
+    }
+  ]
+}

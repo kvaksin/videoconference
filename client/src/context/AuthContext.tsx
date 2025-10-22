@@ -38,6 +38,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
+  const signup = async (fullName: string, email: string, password: string): Promise<void> => {
+    try {
+      const user = await authService.signup(fullName, email, password);
+      setCurrentUser(user);
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const logout = async (): Promise<void> => {
     try {
       await authService.logout();
@@ -55,6 +64,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     currentUser,
     loading,
     login,
+    signup,
     logout,
     updateUser,
   };
