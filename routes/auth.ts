@@ -66,10 +66,10 @@ router.post('/signup', async (req: Request, res: Response) => {
             (req.session as any).userId = newUser.id;
             (req.session as any).isAuthenticated = true;
 
-            const response: ApiResponse<User> = {
+            const response = {
                 success: true,
                 message: 'User created successfully',
-                data: {
+                user: {
                     id: newUser.id,
                     email: newUser.email,
                     fullName: newUser.fullName,
@@ -124,10 +124,10 @@ router.post('/signin', async (req: Request, res: Response) => {
         (req.session as any).userId = user.id;
         (req.session as any).isAuthenticated = true;
 
-        const response: ApiResponse<User> = {
+        const response = {
             success: true,
             message: 'Sign in successful',
-            data: {
+            user: {
                 id: user.id,
                 email: user.email,
                 fullName: user.fullName,
@@ -160,6 +160,21 @@ router.post('/signout', (req: Request, res: Response) => {
             res.json({ 
                 success: true,
                 message: 'Successfully signed out' 
+            });
+        }
+    });
+});
+
+// Clear session (for troubleshooting)
+router.post('/clear-session', (req: Request, res: Response) => {
+    req.session.destroy((err: any) => {
+        if (err) {
+            res.status(500).json({ error: 'Failed to clear session' });
+        } else {
+            res.clearCookie('connect.sid');
+            res.json({ 
+                success: true,
+                message: 'Session cleared successfully. Please log in again.' 
             });
         }
     });
@@ -256,9 +271,9 @@ router.get('/me', authenticateToken, async (req: Request, res: Response) => {
 
 // Verify token
 router.get('/verify', authenticateToken, (req: Request, res: Response) => {
-    const response: ApiResponse<User> = {
-        success: true,
-        data: {
+    const response = {
+        authenticated: true,
+        user: {
             id: (req as any).user.id,
             email: (req as any).user.email,
             fullName: (req as any).user.fullName,

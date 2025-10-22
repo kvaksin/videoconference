@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotification } from '../context/NotificationContext';
-import { fetchAPI } from '../services/api';
+import { fetchAPI, tokenManager } from '../services/api';
 import { User, Meeting } from '../types';
 
 interface NewUserForm {
@@ -44,9 +44,14 @@ const Admin: React.FC = () => {
       
       setUsers(usersData || []);
       setMeetings(meetingsData || []);
-    } catch (err) {
-      error('Failed to load admin data');
-      console.error(err);
+    } catch (err: any) {
+      console.error('Admin data load error:', err);
+      
+      if (err.message?.includes('Access token required') || err.message?.includes('Authentication required')) {
+        error('Authentication issue detected. Please log out and log back in to refresh your session.');
+      } else {
+        error('Failed to load admin data');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -196,12 +201,37 @@ const Admin: React.FC = () => {
             Manage users and system settings
           </p>
         </div>
-        <button 
-          className="nav-btn secondary"
-          onClick={() => navigate('/dashboard')}
-        >
-          ← Back to Dashboard
-        </button>
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+          <button 
+            className="nav-btn"
+            onClick={async () => {
+              try {
+                // Clear old token and force re-authentication
+                tokenManager.removeToken();
+                success('Token cleared. Please log out and log back in.');
+                // Optionally redirect to login
+                // navigate('/login');
+              } catch (err) {
+                error('Failed to clear authentication');
+              }
+            }}
+            style={{ 
+              background: '#e17055', 
+              color: 'white',
+              fontSize: '0.85rem',
+              padding: '0.5rem 1rem'
+            }}
+            title="Fix authentication issues by clearing token"
+          >
+            🔄 Fix Auth
+          </button>
+          <button 
+            className="nav-btn secondary"
+            onClick={() => navigate('/dashboard')}
+          >
+            ← Back to Dashboard
+          </button>
+        </div>
       </header>
 
       {/* Tab Navigation */}

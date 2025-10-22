@@ -27,10 +27,11 @@ import {
 
 // Import JSON database and routes
 const JSONDatabase = require('./database/jsonDatabase');
-const { initializeRouter: initAuthRouter } = require('./routes/auth');
-const { initializeRouter: initAdminRouter } = require('./routes/admin');
 const { initializeRouter: initCalendarRouter } = require('./routes/calendar');
-const { authenticateToken } = require('./middleware/auth');
+
+// Import TypeScript routes
+import { initializeRouter as initAuthRouter } from './routes/auth';
+import { initializeRouter as initAdminRouter } from './routes/admin';
 
 // Environment variables with types
 const PORT: number = parseInt(process.env.PORT || '3001', 10);
@@ -165,121 +166,15 @@ app.get('/api/health', (req: Request, res: Response) => {
     });
 });
 
-// Authentication routes
-app.post('/api/auth/signin', async (req: Request, res: Response) => {
-    try {
-        const { email, password } = req.body;
-        const user: User = await db.authenticateUser(email, password);
-        
-        if (user) {
-            req.session.userId = user.id;
-            req.session.isAuthenticated = true;
-            res.json({ 
-                success: true, 
-                user: {
-                    id: user.id,
-                    fullName: user.fullName,
-                    email: user.email,
-                    hasFullLicense: user.hasFullLicense,
-                    isAdmin: user.isAdmin
-                }
-            });
-        } else {
-            res.status(401).json({ error: 'Invalid credentials' });
-        }
-    } catch (error) {
-        console.error('Login error:', error);
-        res.status(500).json({ error: 'Login failed' });
-    }
-});
+// NOTE: Authentication routes are handled by TypeScript routes in routes/auth.ts
+// NOTE: Admin routes are handled by TypeScript routes in routes/admin.ts
 
-app.post('/api/auth/signout', (req: Request, res: Response) => {
-    req.session.destroy((err: any) => {
-        if (err) {
-            res.status(500).json({ error: 'Logout failed' });
-        } else {
-            res.clearCookie('connect.sid');
-            res.json({ success: true });
-        }
-    });
-});
-
-app.get('/api/auth/verify', async (req: Request, res: Response) => {
-    if (req.session.isAuthenticated && req.session.userId) {
-        try {
-            const user: User = await db.getUserById(req.session.userId);
-            if (user) {
-                res.json({ 
-                    authenticated: true, 
-                    user: {
-                        id: user.id,
-                        fullName: user.fullName,
-                        email: user.email,
-                        hasFullLicense: user.hasFullLicense,
-                        isAdmin: user.isAdmin
-                    }
-                });
-            } else {
-                res.json({ authenticated: false });
-            }
-        } catch (error) {
-            res.json({ authenticated: false });
-        }
-    } else {
-        res.json({ authenticated: false });
-    }
-});
-
-app.get('/api/auth/me', async (req: Request, res: Response): Promise<void> => {
-    if (!req.session.isAuthenticated || !req.session.userId) {
-        res.status(401).json({ error: 'Not authenticated' });
-        return;
-    }
-    
-    try {
-        const user: User = await db.getUserById(req.session.userId);
-        if (user) {
-            res.json({
-                id: user.id,
-                fullName: user.fullName,
-                email: user.email,
-                hasFullLicense: user.hasFullLicense,
-                isAdmin: user.isAdmin
-            });
-        } else {
-            res.status(404).json({ error: 'User not found' });
-        }
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to get user' });
-    }
-});
-
-// Middleware to check authentication
+// Simple auth middleware for session-based routes (legacy support)
 const requireAuth = (req: Request, res: Response, next: NextFunction): void => {
-    if (!req.session.isAuthenticated || !req.session.userId) {
-        res.status(401).json({ error: 'Authentication required' });
-        return;
-    }
-    next();
-};
-
-// Middleware to check admin access
-const requireAdmin = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    if (!req.session.isAuthenticated || !req.session.userId) {
-        res.status(401).json({ error: 'Authentication required' });
-        return;
-    }
-    
-    try {
-        const user: User = await db.getUserById(req.session.userId);
-        if (!user || !user.isAdmin) {
-            res.status(403).json({ error: 'Admin access required' });
-            return;
-        }
-        (req as any).user = user;
+    if (req.session.isAuthenticated && req.session.userId) {
         next();
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to verify admin access' });
+    } else {
+        res.status(401).json({ error: 'Authentication required' });
     }
 };
 
@@ -388,64 +283,7 @@ app.delete('/api/availability/:id', requireFullLicense, async (req: Request, res
     }
 });
 
-// Admin routes
-app.get('/api/admin/users', requireAdmin, async (req: Request, res: Response) => {
-    try {
-        const users: User[] = await db.getAllUsers();
-        res.json(users);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to get users' });
-    }
-});
-
-app.post('/api/admin/users', requireAdmin, async (req: Request, res: Response) => {
-    try {
-        const user: User = await db.createUser(req.body);
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to create user' });
-    }
-});
-
-app.put('/api/admin/users/:id', requireAdmin, async (req: Request, res: Response) => {
-    try {
-        const user: User = await db.updateUser(req.params.id, req.body);
-        res.json(user);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to update user' });
-    }
-});
-
-app.delete('/api/admin/users/:id', requireAdmin, async (req: Request, res: Response) => {
-    try {
-        if (req.params.id === req.session.userId) {
-            res.status(400).json({ error: 'Cannot delete your own account' });
-            return;
-        }
-        await db.deleteUser(req.params.id);
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to delete user' });
-    }
-});
-
-app.get('/api/admin/meetings', requireAdmin, async (req: Request, res: Response) => {
-    try {
-        const meetings: Meeting[] = await db.getAllMeetings();
-        res.json(meetings);
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to get meetings' });
-    }
-});
-
-app.delete('/api/admin/meetings/:id', requireAdmin, async (req: Request, res: Response) => {
-    try {
-        await db.deleteMeeting(req.params.id);
-        res.json({ success: true });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to delete meeting' });
-    }
-});
+// NOTE: Admin routes are handled by TypeScript routes in routes/admin.ts
 
 // Public booking routes
 app.get('/api/booking/:userId/organizer', async (req: Request, res: Response) => {

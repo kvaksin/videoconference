@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import AuthDebugPanel from './components/AuthDebugPanel';
 
 // Page imports
 import Login from './pages/Login';
@@ -90,6 +91,9 @@ const App: React.FC = () => {
               
               {/* Notification System */}
               <NotificationToast />
+              
+              {/* Auth Debug Panel (only visible for admin users) */}
+              <AuthDebugPanel />
             </div>
           </Router>
         </NotificationProvider>

@@ -51,6 +51,7 @@ export interface ApiResponse<T = any> {
 export interface LoginResponse {
   success: boolean;
   user: User;
+  token?: string;
 }
 
 export interface AuthVerifyResponse {

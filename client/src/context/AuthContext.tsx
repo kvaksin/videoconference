@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { authService } from '../services/authService';
+import { tokenManager } from '../services/api';
 import { User, AuthContextType } from '../types';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -15,12 +16,19 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const verifyAuth = async () => {
       try {
-        const response = await authService.verifyAuth();
-        if (response.authenticated && response.user) {
-          setCurrentUser(response.user);
+        // Check if we have a stored token
+        const token = tokenManager.getToken();
+        if (token) {
+          // Try to verify the token
+          const response = await authService.verifyAuth();
+          if (response.authenticated && response.user) {
+            setCurrentUser(response.user);
+          }
         }
       } catch (error) {
         console.error('Auth verification failed:', error);
+        // Token is invalid, remove it
+        tokenManager.removeToken();
       } finally {
         setLoading(false);
       }
@@ -52,6 +60,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       await authService.logout();
       setCurrentUser(null);
     } catch (error) {
+      // Even if logout fails, clear local state
+      tokenManager.removeToken();
+      setCurrentUser(null);
       throw error;
     }
   };

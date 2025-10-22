@@ -24,6 +24,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
+    "start:optimized": "NODE_OPTIONS='--max-old-space-size=4096' SKIP_PREFLIGHT_CHECK=true TSC_COMPILE_ON_ERROR=true react-scripts start",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
     "lint": "eslint src --ext .ts,.tsx,.js,.jsx --report-unused-disable-directives --max-warnings 0",
@@ -53,6 +54,7 @@
   },
   "proxy": "http://localhost:3001",
   "devDependencies": {
+    "@craco/craco": "^7.1.0",
     "@types/node": "^24.9.1",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
@@ -61,6 +63,7 @@
     "@typescript-eslint/eslint-plugin": "^8.46.2",
     "@typescript-eslint/parser": "^8.46.2",
     "eslint-plugin-react-hooks": "^7.0.0",
+    "fork-ts-checker-webpack-plugin": "^9.1.0",
     "rimraf": "^6.0.1",
     "typescript": "^5.9.3"
   }
