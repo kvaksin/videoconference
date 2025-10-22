@@ -27,7 +27,9 @@
     "lint:fix": "npm run client-lint:fix",
     "dev:full": "concurrently \"npm run dev\" \"npm run client\"",
     "dev:full:ts": "concurrently \"npm run dev:ts\" \"npm run client\"",
-    "heroku-postbuild": "npm run build"
+    "heroku-postbuild": "npm run build",
+    "postinstall": "npm rebuild sqlite3",
+    "rebuild-native": "npm rebuild sqlite3"
   },
   "keywords": [
     "webrtc",

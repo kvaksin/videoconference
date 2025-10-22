@@ -688,12 +688,28 @@ server.listen(PORT, () => {
         console.log(`Application: http://localhost:${PORT}`);
     }
     
-    // Display default admin credentials
-    console.log('\n=== Default Admin Credentials ===');
-    console.log('Email: admin@videoconference.com');
-    console.log('Password: admin123');
-    console.log('Please change the password after first login!');
-    console.log('==================================\n');
+    // Display admin setup information
+    if (process.env.CREATE_DEFAULT_ADMIN !== 'false') {
+        if (process.env.DEFAULT_ADMIN_PASSWORD) {
+            console.log('\n=== Default Admin Account ===');
+            console.log('Email: admin@videoconference.com');
+            console.log('Password: (from DEFAULT_ADMIN_PASSWORD env var)');
+            console.log('Please change the password after first login!');
+            console.log('=============================\n');
+        } else {
+            console.log('\n=== Admin Setup Required ===');
+            console.log('No DEFAULT_ADMIN_PASSWORD environment variable set.');
+            console.log('Either:');
+            console.log('1. Set DEFAULT_ADMIN_PASSWORD environment variable, or');
+            console.log('2. Set CREATE_DEFAULT_ADMIN=false and create admin manually');
+            console.log('============================\n');
+        }
+    } else {
+        console.log('\n=== Manual Admin Setup ===');
+        console.log('Default admin creation disabled.');
+        console.log('Create your first admin user through the registration process.');
+        console.log('==========================\n');
+    }
 });
 
 // Graceful shutdown

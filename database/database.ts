@@ -108,26 +108,52 @@ export class Database {
       )
     `);
 
-    // Create default admin user
-    this.createDefaultAdmin();
+    // Create default admin user only if enabled via environment variable
+    if (process.env.CREATE_DEFAULT_ADMIN !== 'false') {
+      this.createDefaultAdmin();
+    }
   }
 
   private async createDefaultAdmin(): Promise<void> {
     try {
-      const hashedPassword = await bcrypt.hash('admin123', 10);
-      
-      this.db.run(`
-        INSERT OR IGNORE INTO users (email, full_name, password_hash, is_admin, has_full_license)
-        VALUES (?, ?, ?, ?, ?)
-      `, ['admin@videoconference.com', 'Administrator', hashedPassword, true, true], (err) => {
+      // Check if any admin user already exists
+      this.db.get(`SELECT COUNT(*) as count FROM users WHERE is_admin = 1`, [], (err, row: any) => {
         if (err) {
-          console.error('Error creating default admin:', err);
+          console.error('Error checking for existing admins:', err);
+          return;
+        }
+
+        // Only create default admin if no admin users exist
+        if (row.count === 0) {
+          // Use environment variable for password or skip creation
+          const adminPassword = process.env.DEFAULT_ADMIN_PASSWORD;
+          if (!adminPassword) {
+            console.log('No admin users found and no DEFAULT_ADMIN_PASSWORD set. Skipping default admin creation.');
+            console.log('You can create an admin user through the registration process.');
+            return;
+          }
+
+          bcrypt.hash(adminPassword, 10).then((hashedPassword) => {
+            this.db.run(`
+              INSERT INTO users (email, full_name, password_hash, is_admin, has_full_license)
+              VALUES (?, ?, ?, ?, ?)
+            `, ['admin@videoconference.com', 'Administrator', hashedPassword, true, true], (insertErr) => {
+              if (insertErr) {
+                console.error('Error creating default admin:', insertErr);
+              } else {
+                console.log('Default admin user created with custom password');
+                console.log('Email: admin@videoconference.com');
+              }
+            });
+          }).catch((hashError) => {
+            console.error('Error hashing admin password:', hashError);
+          });
         } else {
-          console.log('Default admin user created/verified');
+          console.log('Admin user(s) already exist. Skipping default admin creation.');
         }
       });
     } catch (error) {
-      console.error('Error hashing admin password:', error);
+      console.error('Error in createDefaultAdmin:', error);
     }
   }
 

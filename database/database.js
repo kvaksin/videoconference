@@ -95,33 +95,55 @@ class Database {
             )
         `);
 
-        // Create default admin user
-        this.createDefaultAdmin();
+        // Create default admin user only if enabled via environment variable
+        if (process.env.CREATE_DEFAULT_ADMIN !== 'false') {
+            this.createDefaultAdmin();
+        }
     }
 
     async createDefaultAdmin() {
         const adminEmail = 'admin@videoconference.com';
-        const adminPassword = 'admin123';
         const saltRounds = 10;
 
         try {
-            const hashedPassword = await bcrypt.hash(adminPassword, saltRounds);
-            
-            this.db.run(
-                `INSERT OR IGNORE INTO users (email, full_name, password_hash, is_admin, has_full_license) 
-                 VALUES (?, ?, ?, TRUE, TRUE)`,
-                [adminEmail, 'System Administrator', hashedPassword],
-                function(err) {
-                    if (err) {
-                        console.error('Error creating admin user:', err);
-                    } else if (this.changes > 0) {
-                        console.log('Default admin user created:');
-                        console.log('Email: admin@videoconference.com');
-                        console.log('Password: admin123');
-                        console.log('Please change the password after first login!');
-                    }
+            // Check if any admin user already exists
+            this.db.get('SELECT COUNT(*) as count FROM users WHERE is_admin = 1', [], (err, row) => {
+                if (err) {
+                    console.error('Error checking for existing admins:', err);
+                    return;
                 }
-            );
+
+                // Only create default admin if no admin users exist
+                if (row.count === 0) {
+                    // Use environment variable for password or skip creation
+                    const adminPassword = process.env.DEFAULT_ADMIN_PASSWORD;
+                    if (!adminPassword) {
+                        console.log('No admin users found and no DEFAULT_ADMIN_PASSWORD set. Skipping default admin creation.');
+                        console.log('You can create an admin user through the registration process.');
+                        return;
+                    }
+
+                    bcrypt.hash(adminPassword, saltRounds).then((hashedPassword) => {
+                        this.db.run(
+                            `INSERT INTO users (email, full_name, password_hash, is_admin, has_full_license) 
+                             VALUES (?, ?, ?, TRUE, TRUE)`,
+                            [adminEmail, 'System Administrator', hashedPassword],
+                            function(insertErr) {
+                                if (insertErr) {
+                                    console.error('Error creating admin user:', insertErr);
+                                } else {
+                                    console.log('Default admin user created with custom password');
+                                    console.log('Email: admin@videoconference.com');
+                                }
+                            }
+                        );
+                    }).catch((hashError) => {
+                        console.error('Error hashing admin password:', hashError);
+                    });
+                } else {
+                    console.log('Admin user(s) already exist. Skipping default admin creation.');
+                }
+            });
         } catch (error) {
             console.error('Error hashing admin password:', error);
         }

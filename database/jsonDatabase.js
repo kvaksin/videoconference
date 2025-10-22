@@ -28,8 +28,10 @@ class JSONDatabase {
             await this.initializeFile('bookings', []);
             await this.initializeFile('sessions', []);
             
-            // Create default admin user
-            await this.createDefaultAdmin();
+            // Create default admin user only if enabled via environment variable
+            if (process.env.CREATE_DEFAULT_ADMIN !== 'false') {
+                await this.createDefaultAdmin();
+            }
             
             console.log('JSON Database initialized successfully');
         } catch (error) {
@@ -69,10 +71,19 @@ class JSONDatabase {
     // User management
     async createDefaultAdmin() {
         const users = await this.readFile('users');
-        const adminExists = users.find(user => user.email === 'admin@videoconference.com');
+        const adminExists = users.find(user => user.is_admin === true);
         
+        // Only create default admin if no admin users exist
         if (!adminExists) {
-            const hashedPassword = await bcrypt.hash('admin123', 10);
+            // Use environment variable for password or skip creation
+            const adminPassword = process.env.DEFAULT_ADMIN_PASSWORD;
+            if (!adminPassword) {
+                console.log('No admin users found and no DEFAULT_ADMIN_PASSWORD set. Skipping default admin creation.');
+                console.log('You can create an admin user through the registration process.');
+                return;
+            }
+
+            const hashedPassword = await bcrypt.hash(adminPassword, 10);
             const adminUser = {
                 id: uuidv4(),
                 email: 'admin@videoconference.com',
@@ -87,7 +98,10 @@ class JSONDatabase {
             
             users.push(adminUser);
             await this.writeFile('users', users);
-            console.log('Default admin user created');
+            console.log('Default admin user created with custom password');
+            console.log('Email: admin@videoconference.com');
+        } else {
+            console.log('Admin user(s) already exist. Skipping default admin creation.');
         }
     }
 

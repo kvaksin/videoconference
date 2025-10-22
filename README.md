@@ -136,13 +136,29 @@ npm start
 - Production HTTP: `http://localhost:3000`
 - Production HTTPS: `https://localhost:3443` (if certificates are generated)
 
-## 🔐 Default Admin Account
+## 🔐 Admin Account Setup
 
-The system creates a default admin account on first run:
+The system can optionally create a default admin account on first run:
+
+### Automatic Admin Creation
+Set these environment variables to create a default admin:
+```bash
+CREATE_DEFAULT_ADMIN=true
+DEFAULT_ADMIN_PASSWORD=your-secure-password
+```
+
 - **Email**: `admin@videoconference.com`
-- **Password**: `admin123`
+- **Password**: Your custom password from `DEFAULT_ADMIN_PASSWORD`
 
-**⚠️ Important**: Change the password immediately after first login!
+### Manual Admin Creation
+To skip automatic admin creation:
+```bash
+CREATE_DEFAULT_ADMIN=false
+```
+
+Then create the first admin user through the registration process and manually update their admin status in the database.
+
+**⚠️ Important**: Always use a strong password for admin accounts!
 
 ## 📖 User Guide
 
@@ -188,6 +204,10 @@ SESSION_SECRET=your-session-secret-change-in-production
 
 # Database (SQLite file location)
 DB_PATH=./database/videoconference.db
+
+# Admin User Configuration (Optional)
+CREATE_DEFAULT_ADMIN=true              # Set to 'false' to disable default admin creation
+DEFAULT_ADMIN_PASSWORD=your-admin-pass  # Required if CREATE_DEFAULT_ADMIN is true and no admin exists
 ```
 
 ### TLS/HTTPS Setup
@@ -398,6 +418,8 @@ See [Quick Start](#-quick-start) section above for local development setup.
 #### Render.com (Recommended)
 For easy deployment to Render.com, see the detailed [Deployment Guide](DEPLOYMENT.md).
 
+**⚠️ SQLite3 Deployment Fix**: If you encounter `invalid ELF header` errors, see [SQLite3 Deployment Fix Guide](DEPLOYMENT_SQLITE_FIX.md).
+
 Quick deployment steps:
 1. Push your code to GitHub
 2. Connect repository to Render
@@ -440,21 +462,27 @@ export PORT=3000
 
 ### Common Issues
 
-1. **Database not created**:
+1. **SQLite3 "invalid ELF header" error**:
+   - This occurs during deployment to cloud platforms
+   - **Solution**: See [SQLite3 Deployment Fix Guide](DEPLOYMENT_SQLITE_FIX.md)
+   - **Quick fix**: Updated build command rebuilds native binaries
+   - **Alternative**: Consider PostgreSQL for production
+
+2. **Database not created**:
    - Ensure write permissions in the project directory
    - Check `database/` folder exists
 
-2. **Authentication issues**:
+3. **Authentication issues**:
    - Verify JWT_SECRET is set
    - Check session configuration
    - Clear browser cookies
 
-3. **Video/Audio not working**:
+4. **Video/Audio not working**:
    - Use HTTPS in production
    - Check browser permissions
    - Verify STUN server access
 
-4. **Calendar features not working**:
+5. **Calendar features not working**:
    - Ensure user has full license
    - Check authentication status
    - Verify API endpoints
