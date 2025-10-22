@@ -21,6 +21,12 @@ services:
         generateValue: true
       - key: DB_PATH
         value: /opt/render/project/src/database/videoconference.db
+      - key: SQLITE_FORCE_REBUILD
+        value: true
+      - key: npm_config_build_from_source
+        value: true
+      - key: npm_config_sqlite
+        value: /usr/include
     
     # Persistent disk for SQLite database
     disk:
