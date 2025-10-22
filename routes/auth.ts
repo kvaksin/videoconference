@@ -81,8 +81,11 @@ router.post('/signup', async (req: Request, res: Response) => {
 
             res.status(201).json(response);
         } catch (createError: any) {
-            if (createError.code === 'SQLITE_CONSTRAINT_UNIQUE' || createError.message.includes('UNIQUE constraint failed')) {
-                res.status(409).json({ error: 'User with this email already exists' });
+            if (createError.code === 'SQLITE_CONSTRAINT_UNIQUE' || createError.message.includes('UNIQUE constraint failed') || createError.message.includes('already exists')) {
+                res.status(409).json({ 
+                    error: 'An account with this email already exists. Please try signing in instead or use a different email address.',
+                    suggestion: 'Try using the "Sign In" tab if you already have an account.'
+                });
                 return;
             }
             throw createError;
