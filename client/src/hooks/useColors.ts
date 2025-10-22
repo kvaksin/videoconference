@@ -138,7 +138,7 @@ export const useVideoColors = () => {
           accept: ColorScheme.video.callGreen,
           decline: ColorScheme.video.callRed,
           mute: ColorScheme.video.mutedRed,
-          unmute: ColorScheme.video.active,
+          unmute: ColorScheme.video.activeGreen,
         };
         
         return {

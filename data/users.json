@@ -1,7 +1,7 @@
 [
   {
     "id": "d595087d-392d-4549-816e-8d68ce1fe79e",
-    "email": "admin@videoconference.com",
+    "email": "admin@video.com",
     "full_name": "System Administrator",
     "password_hash": "$2a$10$IcHCGoryYGb.2SEP29aGve0205o/yEU2uuodgkRvOjikE.9nOkCJm",
     "is_admin": true,
