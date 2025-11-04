@@ -1,0 +1,37 @@
+openapi: 3.0.0
+info:
+  title: Video Conference API
+  version: 1.0.0
+tags:
+  - name: auth
+    description: Authentication endpoints
+  - name: meetings
+    description: Meeting management endpoints
+paths:
+  /auth/login:
+    post:
+      tags:
+        - auth
+      summary: User login
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Successful login
+  /meetings:
+    get:
+      tags:
+        - meetings
+      summary: List all meetings
+      responses:
+        '200':
+          description: A list of meetings
